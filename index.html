@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<!-- 검색엔진에 올리지 않음 -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Dice Grid</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0d0c14; overflow: hidden; }
+  #c { display: block; width: 100vw; height: 100vh; height: 100dvh; background: #0d0c14; touch-action: none; }
+  #load { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 200px; text-align: center; font: 14px sans-serif; color: #c9c3b6; }
+  #bar { margin-top: 10px; height: 6px; background: #2a2735; }
+  #fill { height: 100%; width: 0; background: #f0a830; }
+  #err { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px; background: #8a1f1f; color: #fff; font: 13px sans-serif; display: none; }
+</style>
+</head>
+<body>
+<canvas id="c" tabindex="-1"></canvas>
+<div id="load">불러오는 중<div id="bar"><div id="fill"></div></div></div>
+<div id="err"></div>
+<script>
+  var canvas = document.getElementById("c");
+  var config = {
+    dataUrl: "Build/DiceGrid_web.data.unityweb",
+    frameworkUrl: "Build/DiceGrid_web.framework.js.unityweb",
+    codeUrl: "Build/DiceGrid_web.wasm.unityweb",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "DiceGrid",
+    productName: "DiceGrid",
+    productVersion: "0.7.2",
+    // 저장(persistentDataPath)이 브라우저 저장소에 바로 남도록
+    autoSyncPersistentDataPath: true,
+    showBanner: function (msg, type) {
+      if (type !== "error") return;
+      var e = document.getElementById("err"); e.textContent = msg; e.style.display = "block";
+    }
+  };
+  var s = document.createElement("script");
+  s.src = "Build/DiceGrid_web.loader.js";
+  s.onload = function () {
+    createUnityInstance(canvas, config, function (p) {
+      document.getElementById("fill").style.width = (100 * p) + "%";
+    }).then(function () {
+      document.getElementById("load").style.display = "none";
+    }).catch(function (m) {
+      var e = document.getElementById("err"); e.textContent = m; e.style.display = "block";
+    });
+  };
+  document.body.appendChild(s);
+</script>
+</body>
+</html>
